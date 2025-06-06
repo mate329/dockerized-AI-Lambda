@@ -1,0 +1,6 @@
+numpy
+pandas
+xgboost-cpu
+scikit-learn
+joblib
+aws-lambda-powertools

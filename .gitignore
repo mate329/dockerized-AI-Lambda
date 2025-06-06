@@ -1,0 +1,7 @@
+.git/
+**/venv
+.DS_Store
+**/feature_stats.json
+**/injury_model.pkl
+**/model_metadata.json
+**/.aws-sam

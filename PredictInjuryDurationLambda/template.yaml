@@ -1,0 +1,44 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Predict Injury Duration Lambda
+
+Resources:
+  PredictInjuryDurationLambda:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      PackageType: Image
+      Timeout: 60
+      Architectures:
+        - x86_64
+      Events:
+        Inference:
+          Type: HttpApi # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /predict-injury-duration
+            Method: post
+            ApiId: !Ref PredictInjuryDurationApi
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./
+      DockerTag: latest
+
+  PredictInjuryDurationApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins:
+          - '*'  # Allow requests from any origin
+        AllowHeaders:
+          - '*'
+        AllowMethods:
+          - '*'
+
+Outputs:
+  PredictInjuryDurationApi:
+    Description: "API Gateway endpoint URL for Prod stage for PredictInjuryDurationApi function"
+    Value: !Sub "https://${PredictInjuryDurationApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/predict-injury-duration/"
+  
+  LambdaFunctionArn:
+    Description: "Injury Duration Prediction Lambda Function ARN"
+    Value: !GetAtt PredictInjuryDurationLambda.Arn
